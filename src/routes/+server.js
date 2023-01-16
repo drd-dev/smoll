@@ -1,9 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { json } from '@sveltejs/kit';
-import { env } from '$env/dynamic/private';
-const supabaseURL = env.SUPABASE_URL;
-const supabaseKey = env.SUPABASE_KEY;
-const supabase = createClient(supabaseURL, supabaseKey);
+import { SUPABASE_KEY, SUPABASE_URL } from '$env/static/private';
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 /** @type {import('./$types').RequestHandler} */
 export async function POST({request}) {
