@@ -184,27 +184,27 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		padding-left: 30px;
 		transition: all var(--transform-speed);
-		margin: 0 auto;
 		overflow: hidden;
 		width: 100%;
+		margin: 0px auto;
+		min-width: 50px;
+	}
+
+	.input-container {
+		width: 100%;
+		height: 100%;
+		margin-left: 30px;
 	}
 
 	input {
 		background-color: transparent;
 		color: #6a6a6a;
-		padding-right: 30px;
 		border: none;
 		font-size: 25px;
 		font-weight: bold;
 		opacity: 1;
 		transition: opacity 1s;
-		width: 95%;
-		height: 100%;
-	}
-
-	.input-container {
 		width: 100%;
 		height: 100%;
 	}
@@ -286,7 +286,6 @@
 		padding: 0px;
 		cursor: pointer;
 		width: 100%;
-		margin: 0px auto;
 	}
 
 	@media (hover: hover) {
@@ -300,6 +299,20 @@
 		animation: shake 0.1s forwards;
 		animation-fill-mode: both;
 		animation-iteration-count: 2;
+	}
+
+	@media only screen and (max-width: 800px) {
+		input {
+			font-size: 15px;
+		}
+
+		.input-container{
+			margin-left: 15px;
+		}
+
+		.done > .input-container > input {
+		text-align: left;
+		}
 	}
 
 	@keyframes shrink {

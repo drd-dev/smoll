@@ -28,18 +28,47 @@
   }
   
   .logo{
-    margin-top: rem;
+    margin-top: 0rem;
     margin-bottom: 0px;
     width: 100%;
     user-select: none;
   }
-  
+
   h3 {
     margin-top: 0px;
   }
 
   .input-container{
     margin-top: 80px;
-    width: 70vw;
+    width: 80%;
   }
+
+  @media only screen and (max-width: 800px){
+    .logo {
+      width: 80%;
+    }
+
+    h3{
+      font-size: 12px;
+    }
+    .input-container{
+      width: 90%;
+    }
+  }
+
+  @media only screen and (max-height: 500px){
+    .logo{
+      width: 80%;
+    }
+
+    h3{
+      font-size: 12px;
+    }
+
+    .input-container{
+      margin-top: 20px;
+    }
+  }
+  
+
 </style>
