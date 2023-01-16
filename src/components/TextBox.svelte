@@ -9,10 +9,9 @@
 	};
 
 	let state = State.IDLE;
-	let originalURL = '';
-	let shortURL = 'https://smoll.xyz/123oaisd';
   let errorMsg = '';
 	let urlBind = '';
+	let checkedURL = '';
 	let activeClass = 'idle';
 
 	// controls the active class based off of the state
@@ -36,18 +35,17 @@
 	}
 
 	//called when the button is clicked
-	function buttonClick() {
+	function submit() {
 		if (state == State.IDLE || state == State.ERROR) {
 			validateLink();
 			if (state != State.ERROR) {
 				state = State.WORKING;
         errorMsg = '';
-				shortenLink();
+				submitLink();
 			}
 		} else if (state == State.DONE) {
 			reset();
 		}
-		console.log(state);
 	}
 
 	// resets the component, getting it ready to accept another link.
@@ -56,53 +54,84 @@
 		urlBind = '';
 	}
 
+	/**
+	 * Validates the user supplied URL
+	 */
 	function validateLink() {
-		if (urlBind == '') {
-			state = State.ERROR;
-      errorMsg = "Please enter a proper URL"
-		} else {
-			state = State.IDLE;
+		checkedURL = urlBind;
+		//check for .
+		if(!urlBind.includes(".")){
+			errorMsg = "Invalid link"
+			state=State.ERROR;
+			return;
 		}
+		//add http if not included
+		if ( !(checkedURL.includes("https://") || checkedURL.includes("http://"))){
+			checkedURL = "http://" + checkedURL;
+		}
+
+
+		try {
+			new URL(checkedURL);
+		}catch(_) {
+			errorMsg = "Invalid link, make sure to include http:// or https://"
+			state = State.ERROR;
+			return;
+		}
+		state = State.IDLE;
 	}
 
-	// shortens to user provided URL
-	function shortenLink() {
-		originalURL = urlBind;
+	// submits the URL to the server
+	async function submitLink() {
+		const response = await fetch('/', {
+			method: 'POST',
+			body: JSON.stringify(checkedURL),
+			headers: {
+				'content-type': 'application/json'
+			}
+		})
+		const data = await response.json();
+
+		//wait a moment for the animation to play out, looks more important than speed? no. But I like the animation.
 		setTimeout(() => {
+			urlBind = "https://smoll.xyz/" + data.data[0].id; //build the URL
 			state = State.DONE;
-			urlBind = shortURL;
-		}, 4000);
+		}, 1600);
 	}
 </script>
-<div class="text-box {activeClass}">
-	<input
-		type="text"
-		bind:value={urlBind}
-		placeholder="enter your link"
-		disabled={state != State.IDLE && state != State.ERROR ? true : false}
-	/>
-	<button on:click={buttonClick}>
-		{#if state == State.IDLE || state == State.ERROR}
-			<svg xmlns="http://www.w3.org/2000/svg" class="ionicon submit-icon" viewBox="0 0 512 512"
-				><path
-					d="M464 256c0-114.87-93.13-208-208-208S48 141.13 48 256s93.13 208 208 208 208-93.13 208-208zm-212.65 91.36a16 16 0 01-.09-22.63L303.58 272H170a16 16 0 010-32h133.58l-52.32-52.73A16 16 0 11274 164.73l79.39 80a16 16 0 010 22.54l-79.39 80a16 16 0 01-22.65.09z"
-				/></svg
-			>
-		{:else if state == State.WORKING}
-			<svg in:fade="{{ delay: 1000 }}" xmlns="http://www.w3.org/2000/svg" class="ionicon happy-icon" viewBox="0 0 512 512"
-				><title>Happy</title><path
-					d="M414.39 97.61A224 224 0 1097.61 414.39 224 224 0 10414.39 97.61zM184 208a24 24 0 11-24 24 23.94 23.94 0 0124-24zm167.67 106.17c-12 40.3-50.2 69.83-95.62 69.83s-83.62-29.53-95.72-69.83a8 8 0 017.83-10.17h175.69a8 8 0 017.82 10.17zM328 256a24 24 0 1124-24 23.94 23.94 0 01-24 24z"
-				/></svg
-			>
-		{:else}
-			<svg xmlns="http://www.w3.org/2000/svg" class="ionicon reload-icon" viewBox="0 0 512 512"
-				><title>Reload</title><path
-					d="M256 48C141.31 48 48 141.31 48 256s93.31 208 208 208 208-93.31 208-208S370.69 48 256 48zm120 182.15a8.62 8.62 0 01-8.62 8.62h-59.54a8.61 8.61 0 01-6.09-14.71l22.17-22.17-5.6-6.51a87.38 87.38 0 10-62.94 148 87.55 87.55 0 0082.42-58.25A16 16 0 11368 295.8a119.4 119.4 0 11-112.62-159.18 118.34 118.34 0 0186.36 36.95l.56.62 4.31 5 14.68-14.68a8.44 8.44 0 016-2.54 8.61 8.61 0 018.68 8.63z"
-				/></svg
-			>
-		{/if}
-	</button>
-</div>
+
+
+	<form class="text-box {activeClass}" method="POST" on:submit|preventDefault={submit}>
+		<input
+			type="text"
+			name="url"
+			bind:value={urlBind}
+			placeholder="enter your link"
+			disabled={state != State.IDLE && state != State.ERROR ? true : false}
+		/>
+		<button type="submit">
+			{#if state == State.IDLE || state == State.ERROR}
+				<svg xmlns="http://www.w3.org/2000/svg" class="ionicon submit-icon" viewBox="0 0 512 512"
+					><path
+						d="M464 256c0-114.87-93.13-208-208-208S48 141.13 48 256s93.13 208 208 208 208-93.13 208-208zm-212.65 91.36a16 16 0 01-.09-22.63L303.58 272H170a16 16 0 010-32h133.58l-52.32-52.73A16 16 0 11274 164.73l79.39 80a16 16 0 010 22.54l-79.39 80a16 16 0 01-22.65.09z"
+					/></svg
+				>
+			{:else if state == State.WORKING}
+				<svg in:fade="{{ delay: 1000 }}" xmlns="http://www.w3.org/2000/svg" class="ionicon happy-icon" viewBox="0 0 512 512"
+					><title>Happy</title><path
+						d="M414.39 97.61A224 224 0 1097.61 414.39 224 224 0 10414.39 97.61zM184 208a24 24 0 11-24 24 23.94 23.94 0 0124-24zm167.67 106.17c-12 40.3-50.2 69.83-95.62 69.83s-83.62-29.53-95.72-69.83a8 8 0 017.83-10.17h175.69a8 8 0 017.82 10.17zM328 256a24 24 0 1124-24 23.94 23.94 0 01-24 24z"
+					/></svg
+				>
+			{:else}
+				<svg xmlns="http://www.w3.org/2000/svg" class="ionicon reload-icon" viewBox="0 0 512 512"
+					><title>Reload</title><path
+						d="M256 48C141.31 48 48 141.31 48 256s93.31 208 208 208 208-93.31 208-208S370.69 48 256 48zm120 182.15a8.62 8.62 0 01-8.62 8.62h-59.54a8.61 8.61 0 01-6.09-14.71l22.17-22.17-5.6-6.51a87.38 87.38 0 10-62.94 148 87.55 87.55 0 0082.42-58.25A16 16 0 11368 295.8a119.4 119.4 0 11-112.62-159.18 118.34 118.34 0 0186.36 36.95l.56.62 4.31 5 14.68-14.68a8.44 8.44 0 016-2.54 8.61 8.61 0 018.68 8.63z"
+					/></svg
+				>
+			{/if}
+		</button>
+	</form>
+
 {#if errorMsg != ''}
 	<h4 style="color: #ff6b6b;">
 		ERROR: <span style="color: #6A6A6A;">{errorMsg}</span>
@@ -144,6 +173,7 @@
 		transition: opacity 1s;
     width: 95%;
     height: 100%;
+		border-radius: 100px;
 	}
 
 	input:focus {
@@ -176,7 +206,7 @@
 	}
 
 	.working {
-		animation: shrink 0.5s forwards ease-in-out;
+		animation: shrink 0.25s forwards ease-in-out;
 		animation-delay: 1.0s;
 	}
 
@@ -222,6 +252,15 @@
 	.done > input {
 		text-align: center;
 		padding: 0px;
+		cursor: pointer;
+		width: auto;
+		margin: 0px auto;
+	}
+	
+	@media(hover:hover){
+		.done > input:hover {
+			color: #6bffd2;
+		}
 	}
 
 	.error {

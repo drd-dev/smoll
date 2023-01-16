@@ -1,33 +1,50 @@
 <script>
-  import TextBox from "../components/TextBox.svelte"
-  import {theme} from '../store';
-
-  let light_bgColor = "#E4FCFA";
-  let dark_bgColor = "#1d2222";
-
-  function toggleTheme(){
-    if($theme == 'light'){
-      $theme = 'dark';
-    }else {
-      $theme = 'light'; 
-    }
-  }
-
+	import { onMount } from "svelte";
+  import TextBox from "../components/TextBox.svelte";
 </script>
 
-<div class="background" style="background-color:{$theme == 'light' ? light_bgColor : dark_bgColor}"></div>
-<div class="theme-toggle">
-  {#if $theme != 'dark'}
-  <!-- svelte-ignore a11y-click-events-have-key-events -->
-  <svg style="cursor: pointer;" on:click="{toggleTheme}" xmlns="http://www.w3.org/2000/svg" class="ionicon sun" viewBox="0 0 512 512"><title>Sunny</title><path d="M256 118a22 22 0 01-22-22V48a22 22 0 0144 0v48a22 22 0 01-22 22zM256 486a22 22 0 01-22-22v-48a22 22 0 0144 0v48a22 22 0 01-22 22zM369.14 164.86a22 22 0 01-15.56-37.55l33.94-33.94a22 22 0 0131.11 31.11l-33.94 33.94a21.93 21.93 0 01-15.55 6.44zM108.92 425.08a22 22 0 01-15.55-37.56l33.94-33.94a22 22 0 1131.11 31.11l-33.94 33.94a21.94 21.94 0 01-15.56 6.45zM464 278h-48a22 22 0 010-44h48a22 22 0 010 44zM96 278H48a22 22 0 010-44h48a22 22 0 010 44zM403.08 425.08a21.94 21.94 0 01-15.56-6.45l-33.94-33.94a22 22 0 0131.11-31.11l33.94 33.94a22 22 0 01-15.55 37.56zM142.86 164.86a21.89 21.89 0 01-15.55-6.44l-33.94-33.94a22 22 0 0131.11-31.11l33.94 33.94a22 22 0 01-15.56 37.55zM256 358a102 102 0 11102-102 102.12 102.12 0 01-102 102z"/></svg>
-  {:else}
-  <!-- svelte-ignore a11y-click-events-have-key-events -->
-  <svg style="cursor: pointer;" on:click="{toggleTheme}" xmlns="http://www.w3.org/2000/svg" class="ionicon moon" viewBox="0 0 512 512"><title>Moon</title><path d="M264 480A232 232 0 0132 248c0-94 54-178.28 137.61-214.67a16 16 0 0121.06 21.06C181.07 76.43 176 104.66 176 136c0 110.28 89.72 200 200 200 31.34 0 59.57-5.07 81.61-14.67a16 16 0 0121.06 21.06C442.28 426 358 480 264 480z"/></svg>
-  {/if}
-</div>
+
 <div class="smoll" >
   <div class="title">
-    <h1>SMOLL</h1>
+    <svg class="logo" width="655" height="222" viewBox="0 0 655 222" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g filter="url(#filter0_i_10_7)">
+      <path d="M63.4539 221.4C53.1872 221.4 43.9872 219.733 35.8539 216.4C27.7206 213.067 21.1872 208.133 16.2539 201.6C11.4539 195.067 8.92057 187.2 8.65391 178H45.0539C45.5872 183.2 47.3872 187.2 50.4539 190C53.5206 192.667 57.5206 194 62.4539 194C67.5206 194 71.5206 192.867 74.4539 190.6C77.3872 188.2 78.8539 184.933 78.8539 180.8C78.8539 177.333 77.6539 174.467 75.2539 172.2C72.9872 169.933 70.1206 168.067 66.6539 166.6C63.3206 165.133 58.5206 163.467 52.2539 161.6C43.1872 158.8 35.7872 156 30.0539 153.2C24.3206 150.4 19.3872 146.267 15.2539 140.8C11.1206 135.333 9.05391 128.2 9.05391 119.4C9.05391 106.333 13.7872 96.1333 23.2539 88.8C32.7206 81.3333 45.0539 77.6 60.2539 77.6C75.7206 77.6 88.1872 81.3333 97.6539 88.8C107.121 96.1333 112.187 106.4 112.854 119.6H75.8539C75.5872 115.067 73.9206 111.533 70.8539 109C67.7872 106.333 63.8539 105 59.0539 105C54.9206 105 51.5872 106.133 49.0539 108.4C46.5206 110.533 45.2539 113.667 45.2539 117.8C45.2539 122.333 47.3872 125.867 51.6539 128.4C55.9206 130.933 62.5872 133.667 71.6539 136.6C80.7206 139.667 88.0539 142.6 93.6539 145.4C99.3872 148.2 104.321 152.267 108.454 157.6C112.587 162.933 114.654 169.8 114.654 178.2C114.654 186.2 112.587 193.467 108.454 200C104.454 206.533 98.5872 211.733 90.8539 215.6C83.1206 219.467 73.9872 221.4 63.4539 221.4ZM294.701 79.6V220H260.501V135.8L229.101 220H201.501L169.901 135.6V220H135.701V79.6H176.101L215.501 176.8L254.501 79.6H294.701ZM385.695 221.4C372.495 221.4 360.361 218.333 349.295 212.2C338.361 206.067 329.628 197.533 323.095 186.6C316.695 175.533 313.495 163.133 313.495 149.4C313.495 135.667 316.695 123.333 323.095 112.4C329.628 101.467 338.361 92.9333 349.295 86.8C360.361 80.6667 372.495 77.6 385.695 77.6C398.895 77.6 410.961 80.6667 421.895 86.8C432.961 92.9333 441.628 101.467 447.895 112.4C454.295 123.333 457.495 135.667 457.495 149.4C457.495 163.133 454.295 175.533 447.895 186.6C441.495 197.533 432.828 206.067 421.895 212.2C410.961 218.333 398.895 221.4 385.695 221.4ZM385.695 190.2C396.895 190.2 405.828 186.467 412.495 179C419.295 171.533 422.695 161.667 422.695 149.4C422.695 137 419.295 127.133 412.495 119.8C405.828 112.333 396.895 108.6 385.695 108.6C374.361 108.6 365.295 112.267 358.495 119.6C351.828 126.933 348.495 136.867 348.495 149.4C348.495 161.8 351.828 171.733 358.495 179.2C365.295 186.533 374.361 190.2 385.695 190.2ZM510.721 193.6H555.521V220H476.521V79.6H510.721V193.6ZM606.034 193.6H650.834V220H571.834V79.6H606.034V193.6Z" fill="url(#paint0_linear_10_7)"/>
+      </g>
+      <circle cx="371" cy="145" r="5" fill="url(#paint1_linear_10_7)"/>
+      <circle cx="401" cy="145" r="5" fill="url(#paint2_linear_10_7)"/>
+      <path d="M374 162C374 163.576 374.31 165.136 374.913 166.592C375.517 168.048 376.4 169.371 377.515 170.485C378.629 171.6 379.952 172.483 381.408 173.087C382.864 173.69 384.424 174 386 174C387.576 174 389.136 173.69 390.592 173.087C392.048 172.483 393.371 171.6 394.485 170.485C395.6 169.371 396.483 168.048 397.087 166.592C397.69 165.136 398 163.576 398 162H386L374 162Z" fill="url(#paint3_linear_10_7)"/>
+      <defs>
+      <filter id="filter0_i_10_7" x="8.6539" y="77.6" width="646.18" height="147.8" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dx="4" dy="4"/>
+      <feGaussianBlur stdDeviation="7"/>
+      <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.529167 0 0 0 0 0.529167 0 0 0 0 0.529167 0 0 0 0.69 0"/>
+      <feBlend mode="normal" in2="shape" result="effect1_innerShadow_10_7"/>
+      </filter>
+      <linearGradient id="paint0_linear_10_7" x1="655" y1="-4.36904e-05" x2="-7.49999" y2="222" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6BFFD2"/>
+      <stop offset="1" stop-color="#6FF68E"/>
+      </linearGradient>
+      <linearGradient id="paint1_linear_10_7" x1="376" y1="140" x2="364.893" y2="141.261" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6BFFD2"/>
+      <stop offset="1" stop-color="#6FF68E"/>
+      </linearGradient>
+      <linearGradient id="paint2_linear_10_7" x1="406" y1="140" x2="394.893" y2="141.261" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6BFFD2"/>
+      <stop offset="1" stop-color="#6FF68E"/>
+      </linearGradient>
+      <linearGradient id="paint3_linear_10_7" x1="398" y1="150" x2="371.343" y2="153.028" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6BFFD2"/>
+      <stop offset="1" stop-color="#6FF68E"/>
+      </linearGradient>
+      </defs>
+      </svg>
+      
+      
+      
     <h3>Shorten your links, nothing more.</h3>
   </div>
   <div class="input-container">
@@ -37,33 +54,6 @@
 
 
 <style>
-
-  .background {
-    transition: background-color 0.5s;
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    top: 0;
-    z-index: -1;
-  }
-
-  .theme-toggle {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    width: 30px;
-    height: 30px;
-  }
-
-  .moon{
-    fill:#6bffd2;
-  }
-  
-  .sun {
-    fill: #1d2222;
-  }
-
   .smoll {
     width: 100%;
     height: 100%;
@@ -71,20 +61,12 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    color: #6bffd2;
-
   }
   
-  h1{
-    font-size: 12rem;
-    font-weight: bold;
+  .logo{
+    margin-top: rem;
     margin-bottom: 0px;
-    vertical-align: bottom;
-    line-height: 180px;
-
-    background: linear-gradient(45deg, #6ff68e, #6bffd2);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    width: 100%;
   }
   
   h3 {

@@ -23,6 +23,8 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@fontsource/poppins": "^4.5.10"
+		"@supabase/supabase-js": "^2.4.0",
+		"countapi-js": "^1.0.2",
+		"dotenv": "^16.0.3"
 	}
 }
