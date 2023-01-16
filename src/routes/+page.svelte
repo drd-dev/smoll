@@ -1,17 +1,7 @@
 <script>
 	import ThemeToggle from "../components/ThemeToggle.svelte";
-import { onMount } from "svelte";
   import TextBox from "../components/TextBox.svelte";
-  import Parallax from "../parallax.js";
   import Logo from "$lib/logo.svg";
-
-  onMount(() => {
-    const parallaxElement = document.querySelector("#parallax-element");
-    if(parallaxElement){
-      const parallax = new Parallax(parallaxElement);
-      parallax.speed = 5;
-    }
-  })
 </script>
 
 <ThemeToggle></ThemeToggle>
@@ -41,6 +31,7 @@ import { onMount } from "svelte";
     margin-top: rem;
     margin-bottom: 0px;
     width: 100%;
+    user-select: none;
   }
   
   h3 {

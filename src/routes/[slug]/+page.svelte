@@ -16,8 +16,6 @@
       goto(data.url);
     }
   })
-
-  console.log(data);
 </script>
 
 <div class="redirect-background"></div>

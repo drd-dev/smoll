@@ -5,13 +5,12 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ params }) {
-  const response = await supabase.from('links').select('original_url').eq('id', params.slug);
+  const response = await supabase.from('links').select('original_url').eq('short_code', params.slug);
 
   if(response.data){
     var url = response.data[0].original_url;
   }
 
-  console.log(url);
   if(url){
     return {error: null, url: url};
   }else{

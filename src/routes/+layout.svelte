@@ -1,24 +1,19 @@
 <script>
-	import countapi from 'countapi-js';
-	import { onMount } from 'svelte';
-
-  let visits = 0;
-
-
-	onMount(async () => {
-		let data = await countapi.visits('global');
-    visits = data.value;
-	});
+	import Logo from "$lib/drd.svg";
+	/**
+	 * @type {{ count: any; value: number; }}
+	 */
+	 export let data;
 </script>
 
 <svelte:head>
   <title>SMOLL</title>
 </svelte:head>
 <slot />
-<div class="visits">
-  {#if visits != 0}
-    <span><span style="color:#6bffd2;">{visits} </span>site visits</span>
-  {/if}
+
+<div class="footer">
+	<span><span>{data.count} </span>Links Shortened</span>
+	<span>Made with ♥ by <a href="https://drd.software"><img src="{Logo}" alt=""></a> </span>
 </div>
 
 <style>
@@ -41,13 +36,27 @@
 		text-align: center;
 		color: #6a6a6a;
 	}
-
-  .visits {
+	.footer{
     position: absolute;
-    bottom: 5px;
-    left: 5px;
+    bottom: 0px;
+    left: 0px;
+		right: 0px;
+		height: 20px;
+		margin-left: 10px;
+		margin-right: 10px;
     font-size: 12px;
     letter-spacing: 1px;
-  }
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+	span{
+		display: flex;
+		gap: 5px;
+	}
+
+	img {
+		width: 35px;
+	}
 
 </style>

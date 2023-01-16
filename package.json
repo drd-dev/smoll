@@ -1,7 +1,8 @@
 {
 	"name": "smoll",
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"private": true,
+	"author": "Dylan Dougherty",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
@@ -24,7 +25,7 @@
 	"type": "module",
 	"dependencies": {
 		"@supabase/supabase-js": "^2.4.0",
-		"countapi-js": "^1.0.2",
-		"dotenv": "^16.0.3"
+		"dotenv": "^16.0.3",
+		"nanoid": "^4.0.0"
 	}
 }
