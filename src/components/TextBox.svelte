@@ -113,7 +113,7 @@
 
 		//wait a moment for the animation to play out, looks more important than speed? no. But I like the animation.
 		setTimeout(() => {
-			urlBind = `smoll.xyz/${data.data[0].short_code}`; //build the URL
+			urlBind = `https://smoll.xyz/${data.data[0].short_code}`; //build the URL
 			state = State.DONE;
 		}, 1600);
 	}
