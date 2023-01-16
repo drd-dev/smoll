@@ -1,4 +1,5 @@
 <script>
+  import { theme } from "../store";
 </script>
 
 <slot></slot>
