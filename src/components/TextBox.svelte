@@ -1,5 +1,6 @@
 <script>
 	import { fade } from 'svelte/transition';
+	import { page } from "$app/stores";
 
 	const State = {
 		IDLE: 'idle',
@@ -34,7 +35,18 @@
 		}
 	}
 
-	//called when the button is clicked
+
+	/**
+	 * Copies the short url to the clipboard
+	 */
+	function copyURL(){
+		if(state == State.DONE){
+			navigator.clipboard.writeText(urlBind).then(() => {
+			})
+		}
+	}
+
+	//called when the button is clicked, starting the shortening process.
 	function submit() {
 		if (state == State.IDLE || state == State.ERROR) {
 			validateLink();
@@ -94,21 +106,24 @@
 
 		//wait a moment for the animation to play out, looks more important than speed? no. But I like the animation.
 		setTimeout(() => {
-			urlBind = "https://smoll.xyz/" + data.data[0].id; //build the URL
+			urlBind = `${$page.url.host}/${data.data[0].id}` //build the URL
 			state = State.DONE;
 		}, 1600);
 	}
 </script>
 
 
-	<form class="text-box {activeClass}" method="POST" on:submit|preventDefault={submit}>
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<form  class="text-box {activeClass}" method="POST" on:submit|preventDefault={submit}>
+	<div on:click="{copyURL}" class="input-container">
 		<input
 			type="text"
 			name="url"
-			bind:value={urlBind}
+			bind:value="{urlBind}"
 			placeholder="enter your link"
 			disabled={state != State.IDLE && state != State.ERROR ? true : false}
 		/>
+	</div>
 		<button type="submit">
 			{#if state == State.IDLE || state == State.ERROR}
 				<svg xmlns="http://www.w3.org/2000/svg" class="ionicon submit-icon" viewBox="0 0 512 512"
@@ -173,7 +188,11 @@
 		transition: opacity 1s;
     width: 95%;
     height: 100%;
-		border-radius: 100px;
+	}
+
+	.input-container{
+		width: 100%;
+		height: 100%;
 	}
 
 	input:focus {
@@ -210,7 +229,7 @@
 		animation-delay: 1.0s;
 	}
 
-	.working > input {
+	.working > .input-container > input {
 		opacity: 0;
 	}
 
@@ -249,16 +268,16 @@
 
   }
 
-	.done > input {
+	.done > .input-container > input {
 		text-align: center;
 		padding: 0px;
 		cursor: pointer;
-		width: auto;
+		width: 100%;
 		margin: 0px auto;
 	}
 	
 	@media(hover:hover){
-		.done > input:hover {
+		.done > .input-container > input:hover {
 			color: #6bffd2;
 		}
 	}
