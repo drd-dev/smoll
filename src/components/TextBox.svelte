@@ -1,11 +1,11 @@
 <script>
 	import { fade } from 'svelte/transition';
-	import { page } from '$app/stores';
+	import {generatedLinks} from "../store";
+	import GeneratedLink from './GeneratedLink.svelte';
 
 	const State = {
 		IDLE: 'idle',
 		WORKING: 'working',
-		DONE: 'done',
 		ERROR: 'error'
 	};
 
@@ -13,8 +13,9 @@
 	let errorMsg = '';
 	let urlBind = '';
 	let checkedURL = '';
-	let copied = false;
 	let activeClass = 'idle';
+
+	console.log($generatedLinks);
 
 	// controls the active class based off of the state
 	$: {
@@ -22,8 +23,6 @@
 			activeClass = State.IDLE;
 		} else if (state == State.WORKING) {
 			activeClass = State.WORKING;
-		} else if (state == State.DONE) {
-			activeClass = State.DONE;
 		} else if (state == State.ERROR) {
 			//set the active class to error, then reset it back to idle after 500ms
 			activeClass = State.ERROR;
@@ -36,23 +35,7 @@
 		}
 	}
 
-	$: {
-		if (copied == true) {
-			setTimeout(() => {
-				copied = false;
-			}, 1000);
-		}
-	}
 
-	/**
-	 * Copies the short url to the clipboard
-	 */
-	function copyURL() {
-		if (state == State.DONE) {
-			copied = true;
-			navigator.clipboard.writeText(urlBind).then(() => {});
-		}
-	}
 
 	//called when the button is clicked, starting the shortening process.
 	function submit() {
@@ -63,7 +46,7 @@
 				errorMsg = '';
 				submitLink();
 			}
-		} else if (state == State.DONE) {
+		} else if (state == State.IDLE) {
 			reset();
 		}
 	}
@@ -87,7 +70,7 @@
 		}
 		//add http if not included
 		if (!(checkedURL.includes('https://') || checkedURL.includes('http://'))) {
-			checkedURL = 'http://' + checkedURL;
+			checkedURL = 'https://' + checkedURL;
 		}
 
 		try {
@@ -113,23 +96,25 @@
 
 		//wait a moment for the animation to play out, looks more important than speed? no. But I like the animation.
 		setTimeout(() => {
-			urlBind = `smoll.xyz/${data.data[0].short_code}`; //build the URL
-			state = State.DONE;
-		}, 1600);
+			urlBind = ''; //build the URL
+			$generatedLinks.push({
+				destination: data.data[0].original_url,
+				code: data.data[0].short_code
+			});
+			state = State.IDLE;
+		}, 1000);
 	}
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <form class="text-box {activeClass}" method="POST" on:submit|preventDefault={submit}>
-	<div on:click={copyURL} class="input-container">
-		<input
-			type="text"
-			name="url"
-			bind:value={urlBind}
-			placeholder="enter your link"
-			disabled={state != State.IDLE && state != State.ERROR ? true : false}
-		/>
-	</div>
+	<input
+		type="text"
+		name="url"
+		bind:value={urlBind}
+		placeholder="enter your link"
+		disabled={state != State.IDLE && state != State.ERROR ? true : false}
+	/>
 	<button type="submit">
 		{#if state == State.IDLE || state == State.ERROR}
 			<svg xmlns="http://www.w3.org/2000/svg" class="ionicon submit-icon" viewBox="0 0 512 512"
@@ -139,7 +124,7 @@
 			>
 		{:else if state == State.WORKING}
 			<svg
-				in:fade={{ delay: 1000 }}
+				in:fade
 				xmlns="http://www.w3.org/2000/svg"
 				class="ionicon happy-icon"
 				viewBox="0 0 512 512"
@@ -147,25 +132,20 @@
 					d="M414.39 97.61A224 224 0 1097.61 414.39 224 224 0 10414.39 97.61zM184 208a24 24 0 11-24 24 23.94 23.94 0 0124-24zm167.67 106.17c-12 40.3-50.2 69.83-95.62 69.83s-83.62-29.53-95.72-69.83a8 8 0 017.83-10.17h175.69a8 8 0 017.82 10.17zM328 256a24 24 0 1124-24 23.94 23.94 0 01-24 24z"
 				/></svg
 			>
-		{:else}
-			<svg xmlns="http://www.w3.org/2000/svg" class="ionicon reload-icon" viewBox="0 0 512 512"
-				><title>Reload</title><path
-					d="M256 48C141.31 48 48 141.31 48 256s93.31 208 208 208 208-93.31 208-208S370.69 48 256 48zm120 182.15a8.62 8.62 0 01-8.62 8.62h-59.54a8.61 8.61 0 01-6.09-14.71l22.17-22.17-5.6-6.51a87.38 87.38 0 10-62.94 148 87.55 87.55 0 0082.42-58.25A16 16 0 11368 295.8a119.4 119.4 0 11-112.62-159.18 118.34 118.34 0 0186.36 36.95l.56.62 4.31 5 14.68-14.68a8.44 8.44 0 016-2.54 8.61 8.61 0 018.68 8.63z"
-				/></svg
-			>
 		{/if}
 	</button>
 </form>
-
 {#if errorMsg != ''}
 	<h4 style="color: #ff6b6b;" transition:fade>
 		ERROR: <span style="color: #6A6A6A;">{errorMsg}</span>
 	</h4>
-{:else if copied}
-	<div class="copied-message" style="margin-top: 20px;" transition:fade>
-		<span>Link copied</span>
-	</div>
 {/if}
+
+<div class="links">
+	{#each $generatedLinks as link}
+		<GeneratedLink destination={link.destination} code={link.code} />
+	{/each}
+</div>
 
 <style>
 	:root {
@@ -191,22 +171,19 @@
 		min-width: 50px;
 	}
 
-	.input-container {
-		width: 100%;
-		height: 100%;
-		margin-left: 30px;
-	}
-
 	input {
+		transition: width calc(var(--transform-speed) * 5) ease-in-out, opacity 0.5s,
+			margin-left calc(var(--transform-speed) * 5);
+		margin-left: 30px;
 		background-color: transparent;
 		color: #6a6a6a;
 		border: none;
 		font-size: 25px;
 		font-weight: bold;
 		opacity: 1;
-		transition: opacity 1s;
 		width: 100%;
 		height: 100%;
+		padding: 0px;
 	}
 
 	input:focus {
@@ -214,20 +191,17 @@
 	}
 
 	button {
-		transition: left calc(var(--transform-speed) * 5) ease-in-out, opacity 0.5s;
-		width: var(--height);
-		height: var(--height);
-		cursor: pointer;
+		transition: width calc(var(--transform-speed) * 5) ease-in-out, opacity 0.5s;
+		min-width: 50px;
+		min-height: 50px;
+		width: 50px;
 		box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
-		position: absolute;
-		right: 0px;
-		left: calc(100% - var(--height));
+		padding: 0px;
 		border: none;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		border-radius: 100px;
-
 		background: rgb(111, 246, 142);
 		background: linear-gradient(45deg, #6ff68e, #6bffd2);
 	}
@@ -238,13 +212,10 @@
 		fill: white;
 	}
 
-	.working {
-		animation: shrink 0.25s forwards ease-in-out;
-		animation-delay: 1s;
-	}
-
-	.working > .input-container > input {
+	.working > input {
 		opacity: 0;
+		width: 0;
+		margin-left: 0px;
 	}
 
 	.happy-icon {
@@ -252,46 +223,10 @@
 		animation-iteration-count: infinite;
 	}
 
-	.reload-icon {
-		animation: rotate 1s forwards linear;
-		animation-delay: 0.25s;
-		animation-iteration-count: 1;
-	}
-
 	.working > button {
 		left: 0px;
 		right: 0px;
 		width: 100%;
-	}
-
-	.done {
-		animation: grow 0.5s forwards ease-in-out;
-	}
-
-	.done > button {
-		left: calc(100% - var(--height));
-		right: 0px;
-		width: var(--height);
-	}
-
-	@media (hover: hover) {
-		.done > button:hover {
-			animation: rotate 0.5s forwards linear;
-			animation-iteration-count: 1;
-		}
-	}
-
-	.done > .input-container > input {
-		text-align: center;
-		padding: 0px;
-		cursor: pointer;
-		width: 100%;
-	}
-
-	@media (hover: hover) {
-		.done > .input-container > input:hover {
-			color: #6bffd2;
-		}
 	}
 
 	.error {
@@ -306,30 +241,8 @@
 			font-size: 15px;
 		}
 
-		.input-container{
+		.input-container {
 			margin-left: 15px;
-		}
-
-		.done > .input-container > input {
-		text-align: left;
-		}
-	}
-
-	@keyframes shrink {
-		from {
-			width: 100%;
-		}
-		to {
-			width: calc(var(--height) - 30px);
-		}
-	}
-
-	@keyframes grow {
-		from {
-			width: calc(var(--height) - 30px);
-		}
-		to {
-			width: 100%;
 		}
 	}
 	@keyframes shake {
@@ -354,5 +267,14 @@
 		to {
 			transform: rotate(360deg);
 		}
+	}
+
+	.links {
+		margin-top: 80px;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		gap: 10px;
 	}
 </style>

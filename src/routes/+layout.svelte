@@ -8,6 +8,7 @@
 
 <svelte:head>
   <title>SMOLL</title>
+	<link rel="stylesheet" href="/style.css">
 </svelte:head>
 <slot />
 
@@ -28,13 +29,13 @@
 	}
 
 	:global(html) {
-		background-color: #e4fcfa;
+		background-color: var(--white);
 	}
 
 	:global(body) {
 		font-family: 'Poppins';
 		text-align: center;
-		color: #6a6a6a;
+		color: var(--grey);
 	}
 	.footer{
     position: absolute;

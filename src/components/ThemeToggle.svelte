@@ -1,5 +1,5 @@
 <script>
-	import { theme } from '../store';
+	import { theme } from '../store.js';
 	let light_bgColor =
 		'background: linear-gradient(45deg, rgba(228,252,250,1) 0%, rgba(228,252,229,1) 100%);';
 	let dark_bgColor =
@@ -67,10 +67,10 @@
 	}
 
 	.moon {
-		fill: #6bffd2;
+		fill: var(--green);
 	}
 
 	.sun {
-		fill: #1d2222;
+		fill: var(--black);
 	}
 </style>
