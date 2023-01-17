@@ -70,6 +70,9 @@
 			checkedURL = 'https://' + checkedURL;
 		}
 
+		//remove any spaces
+		checkedURL = checkedURL.replaceAll(" ", "");
+
 		try {
 			new URL(checkedURL);
 		} catch (_) {

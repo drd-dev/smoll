@@ -1,14 +1,23 @@
 <script>
+	import { onMount } from "svelte";
   import { fade } from "svelte/transition";
   import {generatedLinks} from "../store";
 	import GeneratedLink from './GeneratedLink.svelte';
 
+  let ready = false;
+
   function clearLinks(){
     generatedLinks.set([]);
   }
+
+  onMount(() => {
+    setTimeout(() => {
+      ready = true;
+    }, 100);
+  })
 </script>
 
-{#if $generatedLinks.length > 0}
+{#if $generatedLinks.length > 0 && ready}
 <div class="header" transition:fade>
   <h1>Links</h1>
   <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -28,6 +37,8 @@
     justify-content: center;
     align-items: center;
     gap: 10px;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
   
 .header{

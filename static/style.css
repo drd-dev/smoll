@@ -2,7 +2,7 @@
   --green: #3fe2b1;
   --black: #1d2222;
   --white: #e4fcfa;
-  --grey: #6a6a6a;
+  --grey: #64687b;
 }
 
 a{
@@ -13,6 +13,6 @@ a{
 
 @media (hover:hover) {
   a:hover{
-    color: var(--black);
+    color: var(--grey);
   }
 }

@@ -50,7 +50,7 @@
   
 	.background {
 		transition: background-image 0.5s;
-		position: absolute;
+		position: fixed;
 		left: 0;
 		right: 0;
 		bottom: 0;
@@ -62,8 +62,8 @@
 		position: absolute;
 		right: 10px;
 		top: 10px;
-		width: 30px;
-		height: 30px;
+		width: 20px;
+		height: 20px;
 	}
 
 	.moon {
@@ -71,6 +71,6 @@
 	}
 
 	.sun {
-		fill: var(--black);
+		fill: var(--grey);
 	}
 </style>
