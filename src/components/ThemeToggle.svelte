@@ -61,9 +61,9 @@
 	.theme-toggle {
 		position: absolute;
 		right: 10px;
-		top: 10px;
+		top: 0px;
 		width: 20px;
-		height: 20px;
+		height: 0px;
 	}
 
 	.moon {
