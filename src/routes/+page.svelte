@@ -2,6 +2,7 @@
 	import ThemeToggle from "../components/ThemeToggle.svelte";
   import TextBox from "../components/TextBox.svelte";
   import Logo from "$lib/logo.svg";
+	import LinkList from "../components/LinkList.svelte";
 </script>
 
 <ThemeToggle></ThemeToggle>
@@ -12,6 +13,7 @@
   </div>
   <div class="input-container">
     <TextBox></TextBox>
+    <LinkList></LinkList>
   </div>
 </div>
 

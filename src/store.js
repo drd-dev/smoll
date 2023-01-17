@@ -1,18 +1,23 @@
-import { writable } from "svelte/store";
-import { browser } from "$app/environment";
-
-export const theme = writable(browser && localStorage.theme || 'light');
-export const generatedLinks = writable( browser && localStorage.generatedLinks || []);
+import { writable } from 'svelte/store';
+import { browser } from '$app/environment';
 
 
-if(browser){
-theme.subscribe((/** @type {string} */ value) => {
-    localStorage.theme = value;
+
+const storedTheme = browser ? localStorage.getItem('theme') : 'dark';
+export const theme = writable(storedTheme);
+
+theme.subscribe(/** @type {string} */ (value) => {
+    if(browser && value){
+        localStorage.setItem("theme", value);
+    }
+})
+
+
+const storedLinks = browser ? localStorage.getItem('links') : "[{}]";
+export const generatedLinks = writable(storedLinks ? JSON.parse(storedLinks) : []);
+
+generatedLinks.subscribe(/** @type {Object} */ (value) => {
+    if(browser && value) {
+        localStorage.setItem("links", JSON.stringify(value));
+    }
 });
-
-generatedLinks.subscribe((/** @type {string} */ value) => {
-    localStorage.generatedLinks =  JSON.stringify(value);
-});
-
-}
-  

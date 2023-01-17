@@ -10,9 +10,9 @@
 	 */
 	function toggleTheme() {
 		if ($theme == 'light') {
-			$theme = 'dark';
+			theme.set('dark');
 		} else {
-			$theme = 'light';
+			theme.set('light');
 		}
 	}
 </script>

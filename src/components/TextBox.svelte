@@ -1,7 +1,6 @@
 <script>
-	import { fade } from 'svelte/transition';
 	import {generatedLinks} from "../store";
-	import GeneratedLink from './GeneratedLink.svelte';
+	import { fade } from 'svelte/transition';
 
 	const State = {
 		IDLE: 'idle',
@@ -14,8 +13,6 @@
 	let urlBind = '';
 	let checkedURL = '';
 	let activeClass = 'idle';
-
-	console.log($generatedLinks);
 
 	// controls the active class based off of the state
 	$: {
@@ -97,10 +94,14 @@
 		//wait a moment for the animation to play out, looks more important than speed? no. But I like the animation.
 		setTimeout(() => {
 			urlBind = ''; //build the URL
-			$generatedLinks.push({
+
+			/** @type {[{}]}*/
+			const links = $generatedLinks;
+			links.unshift({
 				destination: data.data[0].original_url,
 				code: data.data[0].short_code
-			});
+			})
+			generatedLinks.set(links);
 			state = State.IDLE;
 		}, 1000);
 	}
@@ -140,12 +141,6 @@
 		ERROR: <span style="color: #6A6A6A;">{errorMsg}</span>
 	</h4>
 {/if}
-
-<div class="links">
-	{#each $generatedLinks as link}
-		<GeneratedLink destination={link.destination} code={link.code} />
-	{/each}
-</div>
 
 <style>
 	:root {
@@ -267,14 +262,5 @@
 		to {
 			transform: rotate(360deg);
 		}
-	}
-
-	.links {
-		margin-top: 80px;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		gap: 10px;
 	}
 </style>
