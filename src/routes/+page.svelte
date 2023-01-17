@@ -1,17 +1,17 @@
 <script>
-	import ThemeToggle from "../components/ThemeToggle.svelte";
   import TextBox from "../components/TextBox.svelte";
   import Logo from "$lib/logo.svg";
+	import LinkList from "../components/LinkList.svelte";
 </script>
 
-<ThemeToggle></ThemeToggle>
 <div class="smoll" >
   <div class="title" >
     <img class="logo" src="{Logo}" alt="logo">
-    <h3>Shorten your links, nothing more.</h3>
+    <h3>Shorten your links.</h3>
   </div>
   <div class="input-container">
     <TextBox></TextBox>
+    <LinkList></LinkList>
   </div>
 </div>
 

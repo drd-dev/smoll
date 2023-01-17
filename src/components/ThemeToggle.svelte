@@ -1,5 +1,5 @@
 <script>
-	import { theme } from '../store';
+	import { theme } from '../store.js';
 	let light_bgColor =
 		'background: linear-gradient(45deg, rgba(228,252,250,1) 0%, rgba(228,252,229,1) 100%);';
 	let dark_bgColor =
@@ -10,9 +10,9 @@
 	 */
 	function toggleTheme() {
 		if ($theme == 'light') {
-			$theme = 'dark';
+			theme.set('dark');
 		} else {
-			$theme = 'light';
+			theme.set('light');
 		}
 	}
 </script>
@@ -50,7 +50,7 @@
   
 	.background {
 		transition: background-image 0.5s;
-		position: absolute;
+		position: fixed;
 		left: 0;
 		right: 0;
 		bottom: 0;
@@ -62,15 +62,15 @@
 		position: absolute;
 		right: 10px;
 		top: 10px;
-		width: 30px;
-		height: 30px;
+		width: 20px;
+		height: 20px;
 	}
 
 	.moon {
-		fill: #6bffd2;
+		fill: var(--green);
 	}
 
 	.sun {
-		fill: #1d2222;
+		fill: var(--grey);
 	}
 </style>

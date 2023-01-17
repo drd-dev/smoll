@@ -1,0 +1,18 @@
+:root{
+  --green: #3fe2b1;
+  --black: #1d2222;
+  --white: #e4fcfa;
+  --grey: #64687b;
+}
+
+a{
+  transition: color 0.25s;
+  text-decoration: none;
+  color: var(--green);
+}
+
+@media (hover:hover) {
+  a:hover{
+    color: var(--grey);
+  }
+}
